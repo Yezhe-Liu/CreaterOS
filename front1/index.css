@@ -1,0 +1,212 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #0a0a0f;
+  color: #e4e4e7;
+  min-height: 100vh;
+}
+
+#root {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+/* 头部 */
+.creator-header {
+  text-align: center;
+  padding: 40px 0 24px;
+  border-bottom: 1px solid #1e1e2e;
+  margin-bottom: 24px;
+}
+
+.creator-header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #a78bfa, #60a5fa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 8px;
+}
+
+.creator-header p {
+  color: #71717a;
+  font-size: 14px;
+}
+
+/* 输入区 */
+.creator-input-area {
+  background: #16161e;
+  border: 1px solid #27273a;
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.creator-input-area textarea {
+  width: 100%;
+  background: #0f0f15;
+  border: 1px solid #27273a;
+  border-radius: 12px;
+  color: #e4e4e7;
+  font-size: 15px;
+  padding: 14px 16px;
+  resize: vertical;
+  min-height: 80px;
+  outline: none;
+  font-family: inherit;
+}
+
+.creator-input-area textarea:focus {
+  border-color: #a78bfa;
+}
+
+.creator-input-area button {
+  width: 100%;
+  margin-top: 12px;
+  padding: 12px;
+  background: linear-gradient(135deg, #7c3aed, #4f46e5);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.creator-input-area button:hover {
+  opacity: 0.9;
+}
+
+.creator-input-area button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* 快捷按钮 */
+.quick-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.quick-actions button {
+  padding: 6px 14px;
+  background: #1e1e2e;
+  border: 1px solid #27273a;
+  border-radius: 20px;
+  color: #a1a1aa;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.quick-actions button:hover {
+  background: #27273a;
+  color: #e4e4e7;
+  border-color: #a78bfa;
+}
+
+/* 状态指示 */
+.creator-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 0;
+  color: #71717a;
+  font-size: 13px;
+}
+
+.creator-status .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* 输出区 */
+.creator-output {
+  background: #16161e;
+  border: 1px solid #27273a;
+  border-radius: 16px;
+  padding: 24px;
+  line-height: 1.8;
+  font-size: 14px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.creator-output h1, .creator-output h2, .creator-output h3 {
+  color: #a78bfa;
+  margin: 16px 0 8px;
+}
+
+.creator-output h2 { font-size: 18px; }
+.creator-output h3 { font-size: 15px; }
+
+.creator-output strong { color: #60a5fa; }
+
+.creator-output code {
+  background: #27273a;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+.creator-output hr {
+  border: none;
+  border-top: 1px solid #27273a;
+  margin: 16px 0;
+}
+
+/* 空状态 */
+.creator-empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: #3f3f46;
+}
+
+.creator-empty .icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.creator-empty p {
+  font-size: 15px;
+}
+
+/* 节点状态标签 */
+.agent-status-bar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 12px 0;
+}
+
+.agent-status-tag {
+  padding: 4px 10px;
+  background: #1e1e2e;
+  border: 1px solid #27273a;
+  border-radius: 6px;
+  font-size: 12px;
+  color: #a1a1aa;
+}
+
+.agent-status-tag.active {
+  border-color: #a78bfa;
+  color: #c4b5fd;
+  animation: pulse 1.5s infinite;
+}
