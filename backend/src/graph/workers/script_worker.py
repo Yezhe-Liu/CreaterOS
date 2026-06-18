@@ -32,7 +32,7 @@ def create_script_node(model: BaseChatModel):
             HumanMessage(content=script_dynamic.format(
                 topic=topic, script_type=script_type, platform=platform, user_text=user_text
             )),
-        ]):
+        ], config):
             full += chunk.content if hasattr(chunk, "content") and chunk.content else ""
 
         return {"generation": full}

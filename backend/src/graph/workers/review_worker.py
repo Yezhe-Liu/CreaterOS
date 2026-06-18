@@ -27,7 +27,7 @@ def create_review_node(model: BaseChatModel):
         for chunk in model.stream([
             SystemMessage(content=review_static),
             HumanMessage(content=review_dynamic.format(content=content)),
-        ]):
+        ], config):
             full += chunk.content if hasattr(chunk, "content") and chunk.content else ""
 
         return {"generation": full}

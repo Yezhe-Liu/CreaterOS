@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-const API_BASE = 'http://localhost:8003';
+const API_BASE = '';
 
 interface StatusEvent {
   node: string;
@@ -40,6 +40,7 @@ export default function App() {
 
       const decoder = new TextDecoder();
       let buffer = '';
+      let currentEvent = '';
 
       while (true) {
         const { done, value } = await reader.read();
@@ -50,16 +51,19 @@ export default function App() {
         buffer = lines.pop() || '';
 
         for (const line of lines) {
-          if (!line.startsWith('data:')) continue;
-          try {
-            const data = JSON.parse(line.slice(5).trim());
-            if (data.event === 'chunk') {
-              setOutput(prev => prev + data.data);
-            } else if (data.event === 'status') {
-              const s = JSON.parse(data.data) as StatusEvent;
-              setStatusNodes(prev => [...new Set([...prev, s.node])]);
+          if (line.startsWith('event:')) {
+            currentEvent = line.slice(6).trim();
+          } else if (line.startsWith('data:')) {
+            const raw = line.slice(5).trim();
+            if (currentEvent === 'chunk') {
+              setOutput(prev => prev + raw);
+            } else if (currentEvent === 'status') {
+              try {
+                const s = JSON.parse(raw) as StatusEvent;
+                setStatusNodes(prev => [...new Set([...prev, s.node])]);
+              } catch {}
             }
-          } catch {}
+          }
         }
       }
     } catch (e) {

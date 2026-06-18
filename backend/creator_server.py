@@ -10,7 +10,7 @@ from __future__ import annotations
 import json
 import uuid
 from datetime import datetime, timezone
-from typing import Any, AsyncIterator
+from typing import Any
 
 import uvicorn
 from dotenv import load_dotenv
@@ -45,6 +45,22 @@ def _utc_now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
+NODE_LABELS = {
+    "router": "分析创作意图",
+    "handoff": "准备创作上下文",
+    "discovery": "选题发现分析中",
+    "script": "脚本撰写中",
+    "adapt": "多平台改编中",
+    "review": "内容质量审核中",
+    "chat": "AI 创作助手应答中",
+    "discovery_worker": "启动选题Agent",
+    "script_worker": "启动脚本Agent",
+    "adapt_worker": "启动改编Agent",
+    "review_worker": "启动审核Agent",
+    "chat_worker": "启动对话Agent",
+}
+
+
 @app.get("/")
 async def root():
     return {"status": "ok", "service": "CreatorOS", "version": "1.0"}
@@ -55,9 +71,10 @@ async def chat_stream(payload: ChatRequest):
     """SSE 流式内容创作对话"""
     session_id = payload.session_id or f"sess-{uuid.uuid4().hex[:12]}"
 
+    graph = get_creator_graph()
+    messages = [HumanMessage(content=payload.message)]
+
     async def event_generator():
-        graph = get_creator_graph()
-        messages = [HumanMessage(content=payload.message)]
         accumulated = ""
 
         yield {
@@ -66,30 +83,58 @@ async def chat_stream(payload: ChatRequest):
         }
 
         try:
+            # Stream node status events
             async for event in graph.astream_events(
                 {"messages": messages},
                 {"configurable": {"thread_id": session_id}},
                 version="v2",
             ):
                 kind = event.get("event", "")
+                name = event.get("name", "")
 
+                # Token-level streaming from chat model
                 if kind == "on_chat_model_stream":
                     chunk = event.get("data", {}).get("chunk")
-                    if chunk and hasattr(chunk, "content") and chunk.content:
-                        text = chunk.content
-                        accumulated += text
-                        yield {"event": "chunk", "data": text}
+                    if chunk:
+                        content = getattr(chunk, "content", "")
+                        if isinstance(content, list):
+                            content = "".join(
+                                t.get("text", "") if isinstance(t, dict) else str(t)
+                                for t in content
+                            )
+                        if content and isinstance(content, str) and content.strip():
+                            accumulated += content
+                            yield {"event": "chunk", "data": content}
 
-                elif kind == "on_chain_start":
-                    name = event.get("name", "")
+                # Node start → status update
+                elif kind == "on_chain_start" and name in NODE_LABELS:
                     yield {
                         "event": "status",
-                        "data": json.dumps({"node": name, "status": "running"}, ensure_ascii=False),
+                        "data": json.dumps(
+                            {"node": name, "label": NODE_LABELS[name], "status": "running"},
+                            ensure_ascii=False,
+                        ),
                     }
+
+            # Also extract generation from final state as fallback
+            if not accumulated:
+                try:
+                    config = {"configurable": {"thread_id": session_id}}
+                    state = graph.get_state(config)
+                    if state and state.values:
+                        gen = state.values.get("generation", "")
+                        if gen:
+                            accumulated = gen
+                            yield {"event": "chunk", "data": gen}
+                except Exception:
+                    pass
 
             yield {
                 "event": "done",
-                "data": json.dumps({"session_id": session_id, "answer": accumulated}, ensure_ascii=False),
+                "data": json.dumps(
+                    {"session_id": session_id, "answer": accumulated or "Agent 已完成处理"},
+                    ensure_ascii=False,
+                ),
             }
 
         except Exception as e:
@@ -104,4 +149,4 @@ async def chat_stream(payload: ChatRequest):
 if __name__ == "__main__":
     print(">>> 启动 CreatorOS 后端服务...")
     print(">>> http://localhost:8003")
-    uvicorn.run("creator_server:app", host="0.0.0.0", port=8003, reload=True)
+    uvicorn.run("creator_server:app", host="0.0.0.0", port=8003)

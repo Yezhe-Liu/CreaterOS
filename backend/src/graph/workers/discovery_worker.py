@@ -27,7 +27,7 @@ def create_discovery_node(model: BaseChatModel):
         for chunk in model.stream([
             SystemMessage(content=discovery_static),
             HumanMessage(content=discovery_dynamic.format(user_text=user_text)),
-        ]):
+        ], config):
             full += chunk.content if hasattr(chunk, "content") and chunk.content else ""
 
         return {"generation": full}

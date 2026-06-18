@@ -6,13 +6,7 @@ export default defineConfig({
   server: {
     port: 5173,
     proxy: {
-      '/chat': 'http://127.0.0.1:8002',
-      '/kb': 'http://127.0.0.1:8002',
-      '/auth': 'http://127.0.0.1:8002',
-      '/models': 'http://127.0.0.1:8002',
-      '/mcp': 'http://127.0.0.1:8002',
-      '/static': 'http://127.0.0.1:8002',
-      '/upload': 'http://127.0.0.1:8002',
+      '/chat': 'http://127.0.0.1:8003',
     },
   },
 })

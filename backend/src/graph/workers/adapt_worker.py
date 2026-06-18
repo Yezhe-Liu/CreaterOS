@@ -28,7 +28,7 @@ def create_adapt_node(model: BaseChatModel):
         for chunk in model.stream([
             SystemMessage(content=adapt_static),
             HumanMessage(content=adapt_dynamic.format(original_content=original, topic=topic)),
-        ]):
+        ], config):
             full += chunk.content if hasattr(chunk, "content") and chunk.content else ""
 
         return {"generation": full}

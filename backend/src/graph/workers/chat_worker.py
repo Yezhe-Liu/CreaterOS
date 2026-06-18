@@ -27,7 +27,7 @@ def create_chat_node(model: BaseChatModel):
         for chunk in model.stream([
             SystemMessage(content=_CHAT_SYSTEM),
             HumanMessage(content=user_text),
-        ]):
+        ], config):
             full += chunk.content if hasattr(chunk, "content") and chunk.content else ""
 
         return {"generation": full}
