@@ -143,15 +143,14 @@ body {
   border: 1px solid #27273a;
   border-radius: 16px;
   padding: 24px;
-  line-height: 1.8;
+  line-height: 1.6;
   font-size: 14px;
-  white-space: pre-wrap;
   word-break: break-word;
 }
 
 .creator-output h1, .creator-output h2, .creator-output h3 {
   color: #a78bfa;
-  margin: 16px 0 8px;
+  margin: 14px 0 4px;
 }
 
 .creator-output h2 { font-size: 18px; }
@@ -209,4 +208,45 @@ body {
   border-color: #a78bfa;
   color: #c4b5fd;
   animation: pulse 1.5s infinite;
+}
+
+/* Markdown 渲染增强 */
+.creator-output > *:first-child { margin-top: 0; }
+.creator-output > *:last-child { margin-bottom: 0; }
+.creator-output blockquote {
+  border-left: 3px solid #a78bfa;
+  padding-left: 16px;
+  color: #c4b5fd;
+  font-style: italic;
+  margin: 8px 0;
+}
+.creator-output ul, .creator-output ol {
+  padding-left: 20px;
+  margin: 4px 0;
+}
+.creator-output li {
+  margin: 2px 0;
+}
+.creator-output table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 8px 0;
+  font-size: 13px;
+}
+.creator-output p {
+  margin: 4px 0;
+}
+.creator-output th {
+  text-align: left;
+  padding: 8px 12px;
+  background: #1e1e2e;
+  color: #a78bfa;
+  border-bottom: 1px solid #27273a;
+}
+.creator-output td {
+  padding: 8px 12px;
+  border-bottom: 1px solid #1a1a2a;
+}
+.creator-output p {
+  margin: 8px 0;
 }

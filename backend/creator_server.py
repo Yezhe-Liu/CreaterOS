@@ -24,6 +24,7 @@ from langchain_core.messages import HumanMessage
 load_dotenv(override=True)
 
 from src.agent import get_creator_graph
+from src.graph.state import normalize_markdown
 
 app = FastAPI(title="CreatorOS", version="1.0", description="AI 内容创作多智能体工作台")
 
@@ -129,10 +130,11 @@ async def chat_stream(payload: ChatRequest):
                 except Exception:
                     pass
 
+            fixed = normalize_markdown(accumulated) if accumulated else "Agent 已完成处理"
             yield {
                 "event": "done",
                 "data": json.dumps(
-                    {"session_id": session_id, "answer": accumulated or "Agent 已完成处理"},
+                    {"session_id": session_id, "answer": fixed},
                     ensure_ascii=False,
                 ),
             }

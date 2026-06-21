@@ -30,7 +30,8 @@ def create_review_node(model: BaseChatModel):
         ], config):
             full += chunk.content if hasattr(chunk, "content") and chunk.content else ""
 
-        return {"generation": full}
+        from src.graph.state import normalize_markdown
+        return {"generation": normalize_markdown(full)}
 
     return review_node
 

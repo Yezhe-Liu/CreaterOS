@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { marked } from 'marked';
 
 const API_BASE = '';
 
@@ -57,6 +58,13 @@ export default function App() {
             const raw = line.slice(5).trim();
             if (currentEvent === 'chunk') {
               setOutput(prev => prev + raw);
+            } else if (currentEvent === 'done') {
+              try {
+                const doneData = JSON.parse(raw);
+                if (doneData.answer) {
+                  setOutput(doneData.answer);
+                }
+              } catch {}
             } else if (currentEvent === 'status') {
               try {
                 const s = JSON.parse(raw) as StatusEvent;
@@ -116,7 +124,7 @@ export default function App() {
       )}
 
       {output ? (
-        <div className="creator-output" dangerouslySetInnerHTML={{ __html: output.replace(/\n/g, '<br/>') }} />
+        <div className="creator-output" dangerouslySetInnerHTML={{ __html: marked.parse(output) }} />
       ) : !loading ? (
         <div className="creator-empty">
           <div className="icon">✨</div>

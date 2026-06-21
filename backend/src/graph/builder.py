@@ -10,8 +10,8 @@
     └── chat_worker      → 对话 (嵌入子图)
 
 双模型注入:
-  flash_model → router, adapt, review
-  pro_model  → discovery, script, chat
+  flash_model → router, discovery, script, adapt, review (全部结构化任务)
+  pro_model  → chat (仅闲聊保留深度推理，降低 TTFB)
 """
 
 from __future__ import annotations
@@ -41,10 +41,10 @@ def build_creator_graph(
 
     # 2. 编译并嵌入 Worker 子图
     print("[CreatorOS] Compiling DiscoveryWorker...")
-    supervisor.add_node("discovery_worker", build_discovery_worker(pro_model))
+    supervisor.add_node("discovery_worker", build_discovery_worker(flash_model))
 
     print("[CreatorOS] Compiling ScriptWorker...")
-    supervisor.add_node("script_worker", build_script_worker(pro_model))
+    supervisor.add_node("script_worker", build_script_worker(flash_model))
 
     print("[CreatorOS] Compiling AdaptWorker...")
     supervisor.add_node("adapt_worker", build_adapt_worker(flash_model))

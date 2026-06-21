@@ -96,3 +96,35 @@ class RouterOutput(BaseModel):
     content_topic: str = Field(description="提取的创作主题，如无则为空")
     script_type: str = Field(description="脚本类型，如用户未指定则为空")
     platforms: list[str] = Field(description="目标平台，如用户未指定则为空")
+
+
+# =============================================================================
+# Markdown 后处理 — 规范化模型输出格式
+# =============================================================================
+
+import re
+
+def normalize_markdown(text: str) -> str:
+    """规范化模型输出的 Markdown，补全缺失的空格和空行。"""
+    if not text:
+        return text
+
+    # 1. ##text → ## text（标题后没有空格）
+    text = re.sub(r'^(#{1,6})([^\s#])', r'\1 \2', text, flags=re.MULTILINE)
+
+    # 2. >text → > text（引用后没有空格，行首和行中都处理）
+    text = re.sub(r'(>)([^\s>])', r'\1 \2', text)
+
+    # 3. -text → - text（列表项后没有空格）
+    text = re.sub(r'^(-)([^\s-])', r'\1 \2', text, flags=re.MULTILINE)
+
+    # 4. ## 标题前补空行（如果前一行不是空行）
+    text = re.sub(r'([^\n])\n(#{1,6}\s)', r'\1\n\n\2', text)
+
+    # 5. 非行首的 > 前插入换行（处理 text>quote 粘连）
+    text = re.sub(r'([^\n>])>', r'\1\n\n>', text)
+
+    # 6. 表格前补空行（| 开头且上一行不是 | 或空）
+    text = re.sub(r'([^\n|])\n(\|)', r'\1\n\n\2', text)
+
+    return text
