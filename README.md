@@ -71,4 +71,4 @@ npx vite --port 5173  # → http://localhost:5173
 
 ## Demo 视频
 
-[▶️ 观看 Demo](此处放视频链接)
+[▶️ 观看 Demo](https://github.com/Yezhe-Liu/CreaterOS/blob/master/demo/%E5%86%85%E5%AE%B9AI%E6%BC%94%E7%A4%BA.mp4)
