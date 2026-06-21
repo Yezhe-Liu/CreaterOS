@@ -71,4 +71,8 @@ npx vite --port 5173  # → http://localhost:5173
 
 ## Demo 视频
 
-[▶️ 观看 Demo](https://github.com/Yezhe-Liu/CreaterOS/blob/master/demo/%E5%86%85%E5%AE%B9AI%E6%BC%94%E7%A4%BA.mp4)
+<a href="https://github.com/Yezhe-Liu/CreaterOS/raw/master/demo/demo.mp4">
+  <img src="https://img.shields.io/badge/▶️-观看_Demo_演示-a78bfa?style=for-the-badge" alt="观看 Demo">
+</a>
+
+> 点击上方按钮观看 CreatorOS 完整演示（3分钟）：从输入创作方向到输出选题分析、脚本、4平台改编、质量审核。
